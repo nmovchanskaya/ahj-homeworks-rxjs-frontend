@@ -8,9 +8,9 @@ export default class EmailWidget {
     this.container = container;
     this.emailIds = [];
     if (process.env.NODE_ENV === 'development') {
-      this.url = 'https://ahj-homeworks-rxjs-backend-a8hi.onrender.com/messages/unread';
-    } else {
       this.url = 'http://localhost:7070/messages/unread';
+    } else {
+      this.url = 'https://ahj-homeworks-rxjs-backend-a8hi.onrender.com/messages/unread';
     }
   }
 
