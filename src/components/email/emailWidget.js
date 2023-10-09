@@ -6,8 +6,12 @@ import { ajax } from 'rxjs/ajax';
 export default class EmailWidget {
   constructor(container) {
     this.container = container;
-    this.url = 'http://localhost:7070/messages/unread';
-    this.emailIds = [222, 333];
+    this.emailIds = [];
+    if (process.env.NODE_ENV === 'development') {
+      this.url = 'https://ahj-homeworks-rxjs-backend-a8hi.onrender.com/messages/unread';
+    } else {
+      this.url = 'http://localhost:7070/messages/unread';
+    }
   }
 
   bindToDOM() {
