@@ -1,8 +1,4 @@
-import {
-  Observable, map, interval, catchError, switchMap, of,
-} from 'rxjs';
-import { ajax } from 'rxjs/ajax';
-import getMsgs from '../../getMsgs';
+import getData from '../../getData';
 
 export default class EmailWidget {
   constructor(container) {
@@ -24,7 +20,7 @@ export default class EmailWidget {
   }
 
   getNewEmails() {
-    const stream$ = getMsgs(this.url, { ids: this.emailIds });
+    const stream$ = getData(this.url, { ids: this.emailIds }, 'messages');
 
     const sub = stream$.subscribe((messages) => {
       console.log(messages);
