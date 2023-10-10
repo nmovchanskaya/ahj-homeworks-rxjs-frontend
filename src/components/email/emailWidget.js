@@ -2,6 +2,7 @@ import {
   Observable, map, interval, catchError, switchMap, of,
 } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
+import getMsgs from '../../getMsgs';
 
 export default class EmailWidget {
   constructor(container) {
@@ -23,34 +24,17 @@ export default class EmailWidget {
   }
 
   getNewEmails() {
-    const stream$ = interval(10000)
-      .pipe(
-        map((value) =>
-        // return saved ids
-          ({ ids: this.emailIds })),
-        switchMap((value) => ajax({
-          url: this.url,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'rxjs-custom-header': 'Rxjs',
-          },
-          body: JSON.stringify(value),
-        })
-          .pipe(
-            map((resp) => {
-              console.log('response: ', resp);
-              this.renderEmails(this.emailElem, resp.response.messages);
-              return resp.response.messages;
-            }),
-            catchError((error) => {
-              console.log('error: ', error);
-              return of(error);
-            }),
-          ),
-        ),
-      );
-    stream$.subscribe((x) => { console.log(x); });
+    const stream$ = getMsgs(this.url, { ids: this.emailIds });
+
+    const sub = stream$.subscribe((messages) => {
+      console.log(messages);
+      this.renderEmails(this.emailElem, messages);
+    });
+
+    // unsubscribe after 5 times
+    setTimeout(() => {
+      sub.unsubscribe();
+    }, 52000);
   }
 
   tableMarkup() {
